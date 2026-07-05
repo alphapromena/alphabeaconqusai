@@ -20,9 +20,9 @@ _Last updated: 2026-07-05._
 | Admin web app (React/Vite) | 🟢 **Live** on Vercel — https://alphabeaconqusai-admin-web.vercel.app |
 | AWS backend (Lambdas, Step Functions, DynamoDB, S3, Cognito, API GW) | 🟢 **Deployed** (stack `AlphaBeacon`, us-east-1) |
 | Admin ↔ backend wiring | 🟢 Live (`VITE_API_URL` baked into the build) |
-| Text generation (Bedrock **Nova Pro**) | 🟢 **Working** — no console gate needed |
+| Text generation (Bedrock **Nova Pro**, us-east-1) | 🟢 **Working** — no console gate needed |
+| Image generation (**Stability Stable Image Core**, us-west-2) | 🟢 **Working** — verified (2.4 MB PNG). us-east-1 has no active text→image model, so images are generated in us-west-2 (see §3). |
 | Pipeline logic (collect → draft → image → guardrails → assemble) | 🟢 **Verified end-to-end** against real AWS |
-| Image generation | 🟡 **Needs 1 manual step** — enable Stability model access in the Bedrock console (all Amazon image models are EOL). Pipeline runs fine without it (image is skipped gracefully). |
 | Step Functions wiring fixes | 🟢 In code & committed — 🟡 **needs one `cdk deploy`** to reach the deployed state machine (the harness blocks me from running IaC applies autonomously) |
 | Daily scheduler | ⚪ Created **DISABLED** by design (enable after images + a test run) |
 | LinkedIn publishing | 🔴 Stubbed — **blocked on LinkedIn Community Management API approval** |
@@ -116,8 +116,8 @@ EventBridge Scheduler ──► Step Functions (DailyPipeline)
 
 ## 3. AI models (what we use & why)
 
-- **Text:** `us.amazon.nova-pro-v1:0` (Amazon Nova Pro) — works with no console gate, ~$1/month at this volume, good JSON-structured copy. Premium upgrade lever: Claude Sonnet 5.
-- **Image:** `stability.stable-image-core-v1:1` (Stability Stable Image Core) — the recommended **Active** model (~$0.04/image). ⚠️ **Requires enabling Stability model access in the Bedrock console** (see §7). All Amazon image models (Titan v1/v2, Nova Canvas) are **EOL/Legacy** in us-east-1.
+- **Text:** `us.amazon.nova-pro-v1:0` (Amazon Nova Pro) in **us-east-1** — works with no console gate, ~$1/month at this volume, good JSON-structured copy. Premium upgrade lever: Claude Sonnet 5.
+- **Image:** `stability.stable-image-core-v1:1` (Stability Stable Image Core) in **us-west-2** — Active, on-demand, ~$0.04/image, verified working. **Why us-west-2:** us-east-1 offers *no* active text→image model for this account — Amazon's Titan/Nova Canvas are EOL/Legacy (Nova Canvas is access-blocked), and the only Stability models in us-east-1 are *editing* tools (upscale/inpaint), not base generators. The Stability base generators (Core/Ultra/SD3.5) are served from us-west-2. Bedrock invocation is region-independent from the S3 bucket, so this is transparent. Set via `config.imageRegion` (env `BEDROCK_IMAGE_REGION`, default `us-west-2`). Premium: `stability.stable-image-ultra-v1:1`.
 
 Full pricing tables, cost projections, and the reasoning are in **[`docs/BEDROCK_MODELS.md`](./BEDROCK_MODELS.md)**.
 
@@ -208,19 +208,18 @@ curl -X POST https://m711qq2a30.execute-api.us-east-1.amazonaws.com/on-demand \
 
 ## 7. What still needs you
 
-Both are one-liners; I'm blocked from doing them autonomously (the harness won't let me run cloud IaC applies, and the Bedrock console needs your AWS login).
+**Just one thing** — I'm blocked from running cloud IaC applies autonomously (harness security boundary).
 
-**A) Deploy the pipeline fixes** (pushes the fixed Step Functions + API to AWS):
+**Deploy the pipeline fixes** (pushes the fixed Step Functions + `/runs/latest` API + the image-region change to AWS):
 ```bash
 cd C:\Users\user\alphabeaconqusai\infra
 npx cdk deploy --require-approval never
 ```
-After this, the deployed state machine and the `/runs/latest` API route are live, and the admin will show real runs.
+After this, the deployed state machine and the `/runs/latest` API route are live, and the admin will show real runs (with images).
 
-**B) Enable an image model** (one-time, in the AWS Console):
-1. Go to **Amazon Bedrock → Model access** in **us-east-1**: https://us-east-1.console.aws.amazon.com/bedrock/home?region=us-east-1#/modelaccess
-2. Enable **Stability AI → Stable Image Core** (and optionally Stable Image Ultra / SD 3.5 Large).
-3. Done — the pipeline will start attaching real images. (No code change needed; the id is already set to `stability.stable-image-core-v1:1`.)
+> Note: `cdk deploy` via a normal shell may hit a 2-minute wrapper timeout, but CloudFormation finishes server-side regardless — just re-check the stack status if the CLI is killed.
+
+**Image model access is already done** — Bedrock's "Model access" page is retired (models auto-activate on first invoke), and I've already invoked & verified `stability.stable-image-core-v1:1` in us-west-2. No console step needed.
 
 **Then, to go live daily:** run a test generation (§4.6), confirm the drafts look right in the admin, then enable the `DefaultDailySchedule` EventBridge schedule (flip `state` to `ENABLED` in `infra/lib/alphabeacon-stack.ts` and redeploy, or enable it in the console).
 

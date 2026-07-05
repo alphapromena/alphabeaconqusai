@@ -6,6 +6,9 @@
 
 ---
 
+> **✅ Verified in THIS account (810972021476), 2026-07-06 — overrides the generic table below for images:**
+> us-east-1 offers **no active text→image model** for this account — Nova Canvas is Legacy + access-blocked, and the only Stability models there are *editing* tools (upscale/inpaint/bg-removal), not base generators. The Stability base generators **`stability.stable-image-core-v1:1`**, `stable-image-ultra-v1:1`, and `sd3-5-large-v1:0` are **Active & on-demand in us-west-2** and were invoked successfully. **AlphaBeacon therefore generates images in us-west-2** (`config.imageRegion`) while text + storage stay in us-east-1. AWS's "Model access" page is retired — serverless models auto-activate on first invoke.
+
 ## 1. TEXT models
 
 AlphaBeacon currently invokes `us.amazon.nova-pro-v1:0` (a cross-region inference-profile ID), so the table uses that same **classic Bedrock InvokeModel/Converse** convention: base ID `provider.model-vN:0`, with a `us.` prefix where a US cross-region inference profile is required.

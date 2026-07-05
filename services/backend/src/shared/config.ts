@@ -16,10 +16,13 @@ export const config = {
   // grounding once the Anthropic use-case form is submitted. Newer models on Bedrock require
   // the cross-region inference-profile id (the `us.` prefix) for on-demand throughput.
   textModelId: process.env.BEDROCK_TEXT_MODEL ?? "us.amazon.nova-pro-v1:0",
-  // Amazon Titan/Nova Canvas image models are all EOL/Legacy in us-east-1 (2026). Stability's
-  // Stable Image Core is the Active, in-region default (~$0.04/image); needs model access
-  // enabled in the Bedrock console. Swap to stability.stable-image-ultra-v1:1 for premium.
+  // Stability Stable Image Core (Active, ~$0.04/image). Swap to stability.stable-image-ultra-v1:1
+  // for premium. NOTE: us-east-1 offers NO active text->image model (Nova Canvas is Legacy +
+  // access-blocked; Stability there is edit-only). The Stability base generators are served from
+  // us-west-2, so images are generated there (imageRegion) while the rest of the stack stays in
+  // us-east-1 — Bedrock invocation is independent of the S3 bucket's region.
   imageModelId: process.env.BEDROCK_IMAGE_MODEL ?? "stability.stable-image-core-v1:1",
+  imageRegion: process.env.BEDROCK_IMAGE_REGION ?? "us-west-2",
 
   /** Bedrock Knowledge Base id for RAG grounding (set after the KB is provisioned). */
   knowledgeBaseId: process.env.BEDROCK_KB_ID ?? "",

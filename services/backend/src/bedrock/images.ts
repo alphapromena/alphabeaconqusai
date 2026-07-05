@@ -1,7 +1,9 @@
 import { BedrockRuntimeClient, InvokeModelCommand } from "@aws-sdk/client-bedrock-runtime";
 import { config } from "../shared/config.js";
 
-const client = new BedrockRuntimeClient({ region: config.region });
+// Image models live in a different region than the rest of the stack (see config.imageRegion) —
+// us-east-1 has no active text->image model, so we invoke Stability in us-west-2.
+const client = new BedrockRuntimeClient({ region: config.imageRegion });
 
 /**
  * Generate a post image from a prompt via a Bedrock image model. Returns raw PNG bytes;
