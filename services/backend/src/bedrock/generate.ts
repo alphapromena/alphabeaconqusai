@@ -20,8 +20,14 @@ export interface GenerateInput {
   signals: Signal[];
   /** RAG snippets retrieved from the tenant's knowledge base. */
   grounding: string[];
-  /** Learned exemplars + preference notes from prior high-performing posts / feedback. */
+  /** This post's primary topic facet (so the 5 tones cover distinct angles, not one idea). */
+  focusTopic?: string;
+  /** Learned exemplars from prior high-performing posts (echo style, not content). */
   exemplars: string[];
+  /** Preference notes distilled from human feedback comments. */
+  preferenceNotes?: string[];
+  /** Openings of recent posts — the model must bring a fresh angle away from these. */
+  avoidThemes?: string[];
   /** On-demand steering instruction, prepended to the context when present. */
   instruction?: string;
 }
@@ -94,9 +100,15 @@ function buildSystemPrompt(brand: BrandProfile, tone: ToneProfile): string {
 function buildUserPrompt(input: GenerateInput): string {
   const parts: string[] = [];
   if (input.instruction) parts.push(`STEERING INSTRUCTION (highest priority): ${input.instruction}`);
+  if (input.focusTopic) parts.push(`PRIMARY FOCUS for THIS post (center it here — the day's other posts cover the other topics): ${input.focusTopic}`);
   parts.push(`Standing topics: ${input.topics.join(", ")}`);
+  if (input.avoidThemes?.length)
+    parts.push(
+      `Bring a genuinely fresh angle. Do NOT repeat the framing of these recent posts:\n- ${input.avoidThemes.join("\n- ")}`,
+    );
   if (input.grounding.length) parts.push(`Grounding from our own materials:\n- ${input.grounding.join("\n- ")}`);
   if (input.exemplars.length) parts.push(`High-performing past examples to echo (style, not content):\n- ${input.exemplars.join("\n- ")}`);
+  if (input.preferenceNotes?.length) parts.push(`Reviewer preferences to honor (from feedback):\n- ${input.preferenceNotes.join("\n- ")}`);
   parts.push(
     `Today's market signals (title — summary — url):\n` +
       input.signals.map((s) => `- ${s.title} — ${s.summary} — ${s.url ?? "no-url"}`).join("\n"),

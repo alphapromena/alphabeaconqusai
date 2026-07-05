@@ -25,7 +25,8 @@ console.log(`✔ collect: runId=${ctx.runId}  signals=${ctx.signals.length}  ton
 
 // 3. Per-tone fan-out — exactly what the SFN Map does, sequentially here.
 const drafts: any[] = [];
-for (const tone of ctx.tones) {
+for (let i = 0; i < ctx.tones.length; i++) {
+  const tone = ctx.tones[i];
   const item = {
     tenantId: ctx.tenantId,
     runId: ctx.runId,
@@ -35,6 +36,9 @@ for (const tone of ctx.tones) {
     signals: ctx.signals,
     grounding: ctx.grounding,
     exemplars: ctx.exemplars,
+    preferenceNotes: ctx.preferenceNotes,
+    recentThemes: ctx.recentThemes,
+    itemIndex: i,
     instruction: ctx.instruction,
   };
   const d1: any = await generateDraft(item);

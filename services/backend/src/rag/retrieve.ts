@@ -1,28 +1,26 @@
-import { BedrockAgentRuntimeClient, RetrieveCommand } from "@aws-sdk/client-bedrock-agent-runtime";
-import { config } from "../shared/config.js";
-
-const client = new BedrockAgentRuntimeClient({ region: config.region });
+import { listKnowledgeChunks } from "../shared/dynamo.js";
+import { embed, cosine } from "./embeddings.js";
 
 /**
- * Retrieval-augmented grounding: pull the most relevant snippets from the tenant's Bedrock
- * Knowledge Base (uploaded company profile, product sheets, case studies, past winning posts)
- * so generation reflects the business rather than generic knowledge.
+ * Retrieval-augmented grounding: pull the most relevant snippets from the tenant's ingested
+ * knowledge (company profile, product sheets, case studies, past winning posts) so generation
+ * reflects the business rather than generic knowledge.
  *
- * Returns [] until a Knowledge Base is provisioned and BEDROCK_KB_ID is set — the pipeline
- * degrades gracefully to topic + signal grounding only.
+ * Lightweight store: chunks + Titan embeddings live in DynamoDB; similarity is computed in the
+ * Lambda (cosine). Fine for MVP scale (tens–hundreds of chunks) and costs ~nothing at idle,
+ * unlike OpenSearch Serverless. Swap for a Bedrock Knowledge Base later without touching callers.
+ *
+ * Returns [] when nothing has been ingested — the pipeline degrades to topic + signal grounding.
  */
-export async function retrieveGrounding(query: string, topK = 5): Promise<string[]> {
-  if (!config.knowledgeBaseId) return [];
+export async function retrieveGrounding(tenantId: string, query: string, topK = 5): Promise<string[]> {
+  const chunks = await listKnowledgeChunks(tenantId);
+  if (!chunks.length) return [];
 
-  const res = await client.send(
-    new RetrieveCommand({
-      knowledgeBaseId: config.knowledgeBaseId,
-      retrievalQuery: { text: query },
-      retrievalConfiguration: { vectorSearchConfiguration: { numberOfResults: topK } },
-    }),
-  );
-
-  return (res.retrievalResults ?? [])
-    .map((r) => r.content?.text?.trim())
-    .filter((t): t is string => Boolean(t));
+  const q = await embed(query);
+  return chunks
+    .map((c) => ({ text: c.text, score: cosine(q, c.vector) }))
+    .sort((a, b) => b.score - a.score)
+    .filter((r) => r.score > 0.05) // drop only near-zero matches (Titan v2 cosines run low)
+    .slice(0, topK)
+    .map((r) => r.text);
 }

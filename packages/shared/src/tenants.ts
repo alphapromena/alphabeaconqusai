@@ -24,15 +24,27 @@ export const ALPHA_PRO_MENA: TenantConfig = {
   // Public sources to watch (NOT LinkedIn feeds — that's against LinkedIn's API terms).
   // The fetcher discovers each site's RSS/feed when the collector stage is implemented.
   sources: [
+    // Direct RSS feeds (reliable, no discovery needed).
+    { id: "dataversity", kind: "rss", value: "https://www.dataversity.net/feed/", label: "DATAVERSITY" },
+    { id: "kdnuggets", kind: "rss", value: "https://www.kdnuggets.com/feed", label: "KDnuggets" },
+    { id: "venturebeat-ai", kind: "rss", value: "https://venturebeat.com/category/ai/feed/", label: "VentureBeat AI" },
+    { id: "unite-ai", kind: "rss", value: "https://www.unite.ai/feed/", label: "Unite.AI" },
+    { id: "wamda", kind: "rss", value: "https://www.wamda.com/feed", label: "Wamda (MENA tech)" },
+    // Site feeds (auto-discovered).
     { id: "ataccama-blog", kind: "blog", value: "https://www.ataccama.com/blog", label: "Ataccama Blog" },
     { id: "ataccama-news", kind: "news", value: "https://www.ataccama.com/company/newsroom", label: "Ataccama Newsroom" },
-    { id: "dataversity", kind: "blog", value: "https://www.dataversity.net", label: "DATAVERSITY" },
     { id: "tdwi", kind: "blog", value: "https://tdwi.org", label: "TDWI" },
     { id: "bigdatawire", kind: "news", value: "https://www.bigdatawire.com", label: "BigDATAwire (Datanami)" },
-    { id: "kw-data-quality", kind: "keyword", value: "data quality" },
+    // Keyword watches via Google News (varied angles keep runs from repeating).
+    { id: "kw-data-quality", kind: "keyword", value: "enterprise data quality" },
     { id: "kw-data-governance", kind: "keyword", value: "data governance" },
     { id: "kw-agentic-ai", kind: "keyword", value: "agentic AI enterprise" },
     { id: "kw-mdm", kind: "keyword", value: "master data management" },
+    { id: "kw-ai-readiness", kind: "keyword", value: "AI readiness data" },
+    { id: "kw-data-catalog", kind: "keyword", value: "data catalog observability" },
+    { id: "kw-cdo", kind: "keyword", value: "chief data officer strategy" },
+    { id: "kw-mena-data", kind: "keyword", value: "Middle East data regulation AI" },
+    { id: "kw-ataccama", kind: "keyword", value: "Ataccama" },
   ],
 
   postsPerRun: 5,

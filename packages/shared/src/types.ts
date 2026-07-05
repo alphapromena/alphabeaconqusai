@@ -65,6 +65,17 @@ export interface KnowledgeItem {
   ingestedAt?: ISODate;
 }
 
+/** A chunk of an ingested knowledge doc + its embedding, for the lightweight RAG store. */
+export interface KnowledgeChunk {
+  tenantId: string;
+  docId: string;
+  chunkIdx: number;
+  title: string;
+  text: string;
+  /** Dense embedding vector (Titan v2 → 1024-dim). */
+  vector: number[];
+}
+
 /** One of the tone registers a draft can be written in. */
 export interface ToneProfile {
   id: string;

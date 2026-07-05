@@ -1,8 +1,9 @@
 import { randomUUID } from "node:crypto";
 import { SFNClient, StartExecutionCommand } from "@aws-sdk/client-sfn";
-import type { Feedback } from "@alphabeacon/shared";
+import type { DraftStatus, Feedback, TenantConfig } from "@alphabeacon/shared";
 import { config } from "../shared/config.js";
-import { latestRun, listDrafts, putFeedback } from "../shared/dynamo.js";
+import { getConfig, latestRun, listDrafts, patchDraft, putConfig, putFeedback } from "../shared/dynamo.js";
+import { ingestDocument } from "../rag/ingest.js";
 import { withPresignedImages } from "../shared/s3.js";
 
 const sfn = new SFNClient({ region: config.region });
@@ -35,6 +36,35 @@ export async function handler(event: HttpEvent) {
     if (method === "POST" && path === "/on-demand") return json(202, await onDemand(body));
     if (method === "POST" && path === "/feedback") return json(201, await saveFeedback(body));
     if (method === "POST" && path === "/publish") return json(200, await publish(body));
+
+    // Inline edit / status change (approve, skip) from the review queue.
+    if (method === "POST" && path === "/draft/edit") {
+      await patchDraft(body.tenantId, body.runId, body.draftId, { editedBody: body.editedBody });
+      return json(200, { saved: true });
+    }
+    if (method === "POST" && path === "/draft/status") {
+      await patchDraft(body.tenantId, body.runId, body.draftId, { status: body.status as DraftStatus });
+      return json(200, { saved: true });
+    }
+
+    // Tenant config (schedule, topics, sources, brand voice) — read/update from the settings UI.
+    if (method === "GET" && path.startsWith("/config")) {
+      const tenantId = event.queryStringParameters?.tenantId;
+      if (!tenantId) return json(400, { error: "tenantId required" });
+      return json(200, { config: (await getConfig(tenantId)) ?? null });
+    }
+    if (method === "PUT" && path === "/config") {
+      await putConfig(body.config as TenantConfig);
+      return json(200, { saved: true });
+    }
+
+    // RAG knowledge ingestion — chunk + embed + store a company doc for grounding.
+    if (method === "POST" && path === "/knowledge") {
+      if (!body.tenantId || !body.text) return json(400, { error: "tenantId and text required" });
+      const chunks = await ingestDocument(body.tenantId, body.title ?? "Untitled", body.text, body.docId);
+      return json(201, { ingested: true, chunks });
+    }
+
     return json(404, { error: "Not found" });
   } catch (err) {
     return json(500, { error: (err as Error).message });

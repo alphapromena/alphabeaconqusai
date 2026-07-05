@@ -3,7 +3,7 @@ import type { TenantConfig } from "@alphabeacon/shared";
 import { getTone } from "@alphabeacon/shared";
 import { collectSignals } from "../collect/feeds.js";
 import { retrieveGrounding } from "../rag/retrieve.js";
-import { getConfig, putRun } from "../shared/dynamo.js";
+import { getConfig, getLearningContext, recentDraftLeads, putRun } from "../shared/dynamo.js";
 
 /**
  * First pipeline stage: load the tenant config, gather raw market signal from public sources,
@@ -24,7 +24,13 @@ export async function handler(event: { tenantId: string; runId?: string; instruc
 
   // Ground on the tenant's own materials, keyed off the topics + steering instruction.
   const groundingQuery = [event.instruction, ...config.topics].filter(Boolean).join(". ");
-  const grounding = await retrieveGrounding(groundingQuery);
+  const grounding = await retrieveGrounding(tenantId, groundingQuery);
+
+  // Learning loop: up-rated past posts become exemplars; feedback comments become preferences.
+  const learning = await getLearningContext(tenantId);
+
+  // Anti-repetition: recent post openings the model should bring a fresh angle away from.
+  const recentThemes = await recentDraftLeads(tenantId);
 
   const tones = config.toneProfileIds
     .map((id) => getTone(id))
@@ -52,6 +58,8 @@ export async function handler(event: { tenantId: string; runId?: string; instruc
     brand: config.brand,
     topics: config.topics,
     grounding,
-    exemplars: [] as string[], // TODO: high-performing past posts + feedback preference notes
+    exemplars: learning.exemplars,
+    preferenceNotes: learning.preferenceNotes,
+    recentThemes,
   };
 }

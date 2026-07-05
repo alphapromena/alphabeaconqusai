@@ -23,6 +23,9 @@ export const config = {
   // us-east-1 — Bedrock invocation is independent of the S3 bucket's region.
   imageModelId: process.env.BEDROCK_IMAGE_MODEL ?? "stability.stable-image-core-v1:1",
   imageRegion: process.env.BEDROCK_IMAGE_REGION ?? "us-west-2",
+  // Embeddings for the lightweight RAG store (chunks + vectors in DynamoDB, cosine search in
+  // the Lambda) — avoids the ~$700/mo idle cost of OpenSearch Serverless at MVP scale.
+  embedModelId: process.env.BEDROCK_EMBED_MODEL ?? "amazon.titan-embed-text-v2:0",
 
   /** Bedrock Knowledge Base id for RAG grounding (set after the KB is provisioned). */
   knowledgeBaseId: process.env.BEDROCK_KB_ID ?? "",
