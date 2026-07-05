@@ -10,3 +10,5 @@ cdk.out/
 *.log
 coverage/
 .pnpm-store/
+_tmp_*
+_t.mts
