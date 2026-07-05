@@ -126,13 +126,18 @@ export class AlphaBeaconStack extends Stack {
       assumedBy: new iam.ServicePrincipal("scheduler.amazonaws.com"),
     });
     stateMachine.grantStartExecution(schedulerRole);
-    // Placeholder daily schedule (per-tenant schedules are created dynamically by the API).
+    // Alpha Pro MENA daily schedule: 2:00 PM Jordan time.
+    // (Per-tenant schedules are created dynamically by the API for additional tenants.)
     new scheduler.CfnSchedule(this, "DefaultDailySchedule", {
       flexibleTimeWindow: { mode: "OFF" },
-      scheduleExpression: "cron(0 9 * * ? *)",
+      scheduleExpression: "cron(0 14 * * ? *)",
       scheduleExpressionTimezone: "Asia/Amman",
-      target: { arn: stateMachine.stateMachineArn, roleArn: schedulerRole.roleArn },
-      state: "DISABLED",
+      target: {
+        arn: stateMachine.stateMachineArn,
+        roleArn: schedulerRole.roleArn,
+        input: JSON.stringify({ tenantId: "alpha-pro-mena" }),
+      },
+      state: "DISABLED", // enabled once Bedrock + config are live
     });
 
     // ── API (HTTP API + Lambda) ─────────────────────────────────────
