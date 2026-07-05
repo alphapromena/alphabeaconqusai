@@ -46,7 +46,7 @@ function DraftCard({ draft }: { draft: Draft }) {
       {draft.image && (
         <div style={{ position: "relative", marginBottom: 12 }}>
           <img
-            src={draft.image.s3Key}
+            src={draft.image.url ?? draft.image.s3Key}
             alt={draft.image.prompt}
             style={{ width: "100%", height: 220, objectFit: "cover", borderRadius: 8, display: "block", background: "#17121b" }}
           />

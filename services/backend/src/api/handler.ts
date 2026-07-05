@@ -3,6 +3,7 @@ import { SFNClient, StartExecutionCommand } from "@aws-sdk/client-sfn";
 import type { Feedback } from "@alphabeacon/shared";
 import { config } from "../shared/config.js";
 import { latestRun, listDrafts, putFeedback } from "../shared/dynamo.js";
+import { withPresignedImages } from "../shared/s3.js";
 
 const sfn = new SFNClient({ region: config.region });
 
@@ -24,12 +25,12 @@ export async function handler(event: HttpEvent) {
       if (!tenantId) return json(400, { error: "tenantId required" });
       const run = await latestRun(tenantId);
       if (!run) return json(200, { run: null, drafts: [] });
-      return json(200, { run, drafts: await listDrafts(tenantId, run.runId) });
+      return json(200, { run, drafts: await withPresignedImages(await listDrafts(tenantId, run.runId)) });
     }
     if (method === "GET" && path.startsWith("/drafts")) {
       const q = event.queryStringParameters ?? {};
       const drafts = q.tenantId && q.runId ? await listDrafts(q.tenantId, q.runId) : [];
-      return json(200, { drafts });
+      return json(200, { drafts: await withPresignedImages(drafts) });
     }
     if (method === "POST" && path === "/on-demand") return json(202, await onDemand(body));
     if (method === "POST" && path === "/feedback") return json(201, await saveFeedback(body));

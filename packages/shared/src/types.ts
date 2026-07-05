@@ -112,6 +112,8 @@ export interface GeneratedImage {
   s3Key: string;
   prompt: string;
   model: string;
+  /** Short-lived presigned GET URL the admin can render (the bucket is private). Set by the API. */
+  url?: string;
 }
 
 export interface GuardrailReport {
