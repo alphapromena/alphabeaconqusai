@@ -44,7 +44,9 @@ export async function handler(event: { tenantId: string; runId?: string; instruc
     tenantId,
     runId,
     kind,
-    instruction: event.instruction,
+    // Empty string (not undefined) so the Step Functions Map itemSelector JSONPath
+    // "$.instruction" always resolves — an absent field would fail the state.
+    instruction: event.instruction ?? "",
     tones,
     signals,
     brand: config.brand,

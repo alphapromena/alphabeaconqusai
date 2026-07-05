@@ -16,7 +16,10 @@ export const config = {
   // grounding once the Anthropic use-case form is submitted. Newer models on Bedrock require
   // the cross-region inference-profile id (the `us.` prefix) for on-demand throughput.
   textModelId: process.env.BEDROCK_TEXT_MODEL ?? "us.amazon.nova-pro-v1:0",
-  imageModelId: process.env.BEDROCK_IMAGE_MODEL ?? "amazon.titan-image-generator-v2:0",
+  // Amazon Titan/Nova Canvas image models are all EOL/Legacy in us-east-1 (2026). Stability's
+  // Stable Image Core is the Active, in-region default (~$0.04/image); needs model access
+  // enabled in the Bedrock console. Swap to stability.stable-image-ultra-v1:1 for premium.
+  imageModelId: process.env.BEDROCK_IMAGE_MODEL ?? "stability.stable-image-core-v1:1",
 
   /** Bedrock Knowledge Base id for RAG grounding (set after the KB is provisioned). */
   knowledgeBaseId: process.env.BEDROCK_KB_ID ?? "",

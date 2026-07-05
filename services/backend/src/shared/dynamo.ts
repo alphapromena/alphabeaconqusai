@@ -9,7 +9,11 @@ import {
 import type { Draft, Feedback, Post, Run, TenantConfig } from "@alphabeacon/shared";
 import { config } from "./config.js";
 
-const doc = DynamoDBDocumentClient.from(new DynamoDBClient({ region: config.region }));
+// removeUndefinedValues: optional fields (Run.finishedAt, Citation.sourceUrl, Draft.image…)
+// are frequently undefined; without this the DocumentClient throws on marshalling.
+const doc = DynamoDBDocumentClient.from(new DynamoDBClient({ region: config.region }), {
+  marshallOptions: { removeUndefinedValues: true },
+});
 const TABLE = config.tableName;
 
 /** Single-table keys: pk = TENANT#<id>, sk = <ENTITY>#<...> */
@@ -31,6 +35,20 @@ export async function putRun(run: Run): Promise<void> {
 export async function getRun(tenantId: string, runId: string): Promise<Run | undefined> {
   const res = await doc.send(new GetCommand({ TableName: TABLE, Key: { pk: pk(tenantId), sk: `RUN#${runId}` } }));
   return res.Item?.data as Run | undefined;
+}
+
+/** The most recent completed run for a tenant — powers the admin's default review queue. */
+export async function latestRun(tenantId: string): Promise<Run | undefined> {
+  const res = await doc.send(
+    new QueryCommand({
+      TableName: TABLE,
+      KeyConditionExpression: "pk = :pk AND begins_with(sk, :sk)",
+      ExpressionAttributeValues: { ":pk": pk(tenantId), ":sk": "RUN#" },
+    }),
+  );
+  const runs = (res.Items ?? []).map((i) => i.data as Run).filter((r) => r.status === "completed");
+  runs.sort((a, b) => (b.finishedAt ?? b.startedAt ?? "").localeCompare(a.finishedAt ?? a.startedAt ?? ""));
+  return runs[0];
 }
 
 export async function putDrafts(drafts: Draft[]): Promise<void> {

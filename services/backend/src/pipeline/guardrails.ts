@@ -1,5 +1,6 @@
-import type { Citation, GuardrailReport } from "@alphabeacon/shared";
+import type { Citation, Draft, GuardrailReport } from "@alphabeacon/shared";
 import { MARKETING_BUZZWORDS } from "@alphabeacon/shared";
+import { getConfig, recentPostBodies } from "../shared/dynamo.js";
 
 /**
  * Guardrails run on every draft before a human sees it. They are not optional polish — the
@@ -97,13 +98,19 @@ function round(n: number): number {
   return Math.round(n * 100) / 100;
 }
 
-/** Step Functions task: attach the guardrail report to a draft and set its status. */
-export async function handler(event: {
-  draft: { body: string; editedBody?: string; citations: Citation[] };
-  bannedTerms: string[];
-  recentBodies: string[];
-}) {
-  const body = event.draft.editedBody ?? event.draft.body;
-  const guardrails = buildReport(body, event.draft.citations, event.bannedTerms ?? [], event.recentBodies ?? []);
-  return { ...event.draft, guardrails, status: reportPassed(guardrails) ? "needs_review" : "flagged" };
+/**
+ * Step Functions task: attach the guardrail report to a draft and set its status.
+ *
+ * Receives the flat draft object emitted by the preceding "generate image" step (it carries
+ * tenantId + the draft fields). Self-sufficient: it fetches the tenant's banned terms and
+ * recent post history itself, so the state machine doesn't have to thread that data through
+ * every step. Returns the completed Draft.
+ */
+export async function handler(event: Draft & { imagePrompt?: string }) {
+  const body = event.editedBody ?? event.body;
+  const cfg = await getConfig(event.tenantId);
+  const bannedTerms = cfg?.brand.bannedTerms ?? [];
+  const recentBodies = await recentPostBodies(event.tenantId);
+  const guardrails = buildReport(body, event.citations ?? [], bannedTerms, recentBodies);
+  return { ...event, guardrails, status: reportPassed(guardrails) ? "needs_review" : "flagged" } as Draft;
 }

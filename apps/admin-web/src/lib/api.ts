@@ -1,6 +1,7 @@
 import type { Draft } from "@alphabeacon/shared";
 
 const BASE = import.meta.env.VITE_API_URL ?? "";
+const TENANT = "alpha-pro-mena";
 
 /** Thin API client for the admin app. Endpoints are served by services/backend. */
 export const api = {
@@ -12,7 +13,11 @@ export const api = {
       const data = await res.json();
       return data.drafts ?? [];
     }
-    const res = await fetch(`${BASE}/drafts${runId ? `?runId=${runId}` : ""}`);
+    // With a backend: a specific run's drafts, else the latest completed run's drafts.
+    const url = runId
+      ? `${BASE}/drafts?tenantId=${TENANT}&runId=${encodeURIComponent(runId)}`
+      : `${BASE}/runs/latest?tenantId=${TENANT}`;
+    const res = await fetch(url);
     const data = await res.json();
     return data.drafts ?? [];
   },

@@ -101,9 +101,22 @@ export class AlphaBeaconStack extends Stack {
       outputPath: "$.Payload",
     });
 
-    // Fan out: one draft per tone profile, generated in parallel.
+    // Fan out: one draft per tone profile, generated in parallel. itemSelector builds each
+    // branch's input by merging the current tone ($$.Map.Item.Value) with the shared run
+    // context (tenantId, brand, signals, grounding…) so "generate draft" gets a full payload.
     const perTone = new sfn.Map(this, "Per tone", {
       itemsPath: "$.tones",
+      itemSelector: {
+        tenantId: sfn.JsonPath.stringAt("$.tenantId"),
+        runId: sfn.JsonPath.stringAt("$.runId"),
+        tone: sfn.JsonPath.objectAt("$$.Map.Item.Value"),
+        brand: sfn.JsonPath.objectAt("$.brand"),
+        topics: sfn.JsonPath.objectAt("$.topics"),
+        signals: sfn.JsonPath.objectAt("$.signals"),
+        grounding: sfn.JsonPath.objectAt("$.grounding"),
+        exemplars: sfn.JsonPath.objectAt("$.exemplars"),
+        instruction: sfn.JsonPath.stringAt("$.instruction"),
+      },
       resultPath: "$.drafts",
       maxConcurrency: 5,
     });

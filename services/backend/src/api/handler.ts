@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { SFNClient, StartExecutionCommand } from "@aws-sdk/client-sfn";
 import type { Feedback } from "@alphabeacon/shared";
 import { config } from "../shared/config.js";
-import { listDrafts, putFeedback } from "../shared/dynamo.js";
+import { latestRun, listDrafts, putFeedback } from "../shared/dynamo.js";
 
 const sfn = new SFNClient({ region: config.region });
 
@@ -18,6 +18,14 @@ export async function handler(event: HttpEvent) {
   const body = event.body ? JSON.parse(event.body) : {};
 
   try {
+    // Latest completed run + its drafts — the admin's default review queue (no runId needed).
+    if (method === "GET" && path.startsWith("/runs/latest")) {
+      const tenantId = event.queryStringParameters?.tenantId;
+      if (!tenantId) return json(400, { error: "tenantId required" });
+      const run = await latestRun(tenantId);
+      if (!run) return json(200, { run: null, drafts: [] });
+      return json(200, { run, drafts: await listDrafts(tenantId, run.runId) });
+    }
     if (method === "GET" && path.startsWith("/drafts")) {
       const q = event.queryStringParameters ?? {};
       const drafts = q.tenantId && q.runId ? await listDrafts(q.tenantId, q.runId) : [];
