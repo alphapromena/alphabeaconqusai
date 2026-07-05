@@ -28,7 +28,15 @@ Across 6 runs / 30 drafts:
 5. **Grounding (RAG)** — posts are now grounded in seeded Alpha Pro / Ataccama knowledge, so specifics (Ataccama ONE capabilities, Baker Tilly, MENA) vary the content with real facts rather than generic filler.
 
 ## Finding (after improvements)
-<!-- AFTER-RESULTS -->
+The first run generated with the changes (`23fe08e4`) is the **most varied of all runs measured**:
+
+| Metric | Before (baseline avg) | After (new run) | Change |
+|---|---|---|---|
+| **Intra-run diversity** | ~0.877 (range 0.82–0.91) | **0.763** | ✅ clearly more varied — the 5 tones now cover distinct facets, not one idea |
+| Cross-run repetition (per-tone) | 0.77–0.89 | direct-cta 0.85→0.82, educational 0.86→0.82, provocative→0.78 | ✅ trending fresher |
+| Image-prompt vocabulary | 118 words / 20 | 141 words / 25 | ✅ still varied |
+
+**Read:** the per-tone topic focus is the biggest lever — one run now spans data quality, governance, agentic AI, AI-readiness, and observability instead of five variations of "clean your data." Cross-run repetition improves gradually as older (pre-fix) runs age out and every new run avoids the recent themes. Absolute cosines stay high because all posts share one brand domain (expected and on-brand).
 
 ## Sources the model pulls from
 - **Live signal** (`collect/feeds.ts`): Google-News keyword searches + RSS/blog feeds — DATAVERSITY, KDnuggets, VentureBeat AI, Unite.AI, Wamda (MENA), Ataccama blog/newsroom, TDWI, BigDATAwire, plus keyword watches (data quality, governance, agentic AI, MDM, AI readiness, data catalog, CDO, MENA data regulation, Ataccama). One failing source never sinks a run.

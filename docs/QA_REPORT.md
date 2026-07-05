@@ -85,5 +85,31 @@ The draft body is stored as Markdown (`**bold**`, `- bullets`) but the Review Qu
 
 **No functional defects found.** Every layer — Bedrock (text + image), Step Functions orchestration, guardrails, DynamoDB, S3, API, Cognito, Scheduler, and the admin UI — behaves correctly end-to-end.
 
+---
+
+## Round 2 — new features (2026-07-06)
+
+After the initial pass, the remaining blueprint gaps were built and QA'd. New API routes were verified by invoking the real handler against live AWS (they go live on the next `cdk deploy`).
+
+| Test | Result |
+|---|---|
+| `POST /knowledge` ingests (chunk + embed) | ✅ |
+| `GET /config` returns config | ✅ |
+| `PUT /config` persists | ✅ |
+| `POST /draft/edit` persists `editedBody` | ✅ |
+| `POST /draft/status` persists status | ✅ |
+| `GET /runs/latest` presigns all images | ✅ 5/5 |
+| `GET /config` missing tenantId → 400 | ✅ |
+| `POST /knowledge` missing text → 400 | ✅ |
+| RAG seed + semantic retrieval | ✅ (see `MODEL_EVAL.md`) |
+| Feedback learning loop (exemplars + notes) | ✅ wired & typechecked |
+| Admin build (37 modules, Settings + Review tabs) | ✅ |
+
+**New-feature QA: 8/8 route checks pass** + RAG/learning verified. The Markdown finding from Round 1 is now **fixed** (Review Queue renders Markdown).
+
+## Companion reports
+- **`MODEL_EVAL.md`** — post variety/repetition study. Finding: baseline was repetitive (intra-run cosine ~0.88); after per-tone topic focus + anti-repetition, the new run is the most varied measured (**0.76**).
+- **`SECURITY_REVIEW.md`** — 1 High (API is unauthenticated — fix before public exposure), rest minor. No secrets, no injection, private data at rest.
+
 ## Verdict
-**The AlphaBeacon MVP is functionally complete and production-sound for Phase 1.** Remaining items are by design / external: enable the daily Scheduler when ready, LinkedIn publishing (blocked on API approval), and the Markdown-rendering polish above.
+**The AlphaBeacon MVP is functionally complete for Phase 1** — every blueprint feature except LinkedIn publishing (externally blocked) is built and verified. Before sharing the admin publicly, address the one High security item (API auth). Deploy the latest backend with `cd infra && npx cdk deploy` to make the new routes live.

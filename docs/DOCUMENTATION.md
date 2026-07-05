@@ -237,6 +237,14 @@ The admin (Vercel) already auto-deploys on push, but the **new API routes only g
 ---
 
 ## 8. Security notes
+- ⚠️ **The HTTP API is currently unauthenticated** — fine for a private single-operator demo, but wire a Cognito authorizer + admin login before sharing the URL. Full analysis in **`docs/SECURITY_REVIEW.md`** (1 High + minor items).
 - AWS credentials live in `~/.aws/credentials` on your machine — never in the repo, never shared in chat.
 - LinkedIn OAuth tokens + third-party keys belong in **AWS Secrets Manager** (the stack provisions a secret), never in the repo.
 - `.env*` is gitignored except `.env.example` and the admin's public `.env.production` (which holds only the public API URL).
+- Assets S3 bucket is private; images are served via short-lived presigned URLs.
+
+## 9. Companion documents
+- **`BEDROCK_MODELS.md`** — Bedrock text + image model pricing & recommendation.
+- **`MODEL_EVAL.md`** — post variety / repetition evaluation (before/after).
+- **`QA_REPORT.md`** — full end-to-end QA results.
+- **`SECURITY_REVIEW.md`** — security findings & remediation order.
