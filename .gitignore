@@ -6,6 +6,7 @@ cdk.out/
 .env
 .env.*
 !.env.example
+!apps/admin-web/.env.production
 .DS_Store
 *.log
 coverage/

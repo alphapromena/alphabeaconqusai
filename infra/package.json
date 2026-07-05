@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "bin": { "alphabeacon": "bin/app.js" },
+  "bin": {
+    "alphabeacon": "bin/app.js"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -12,7 +14,11 @@
     "synth": "cdk synth"
   },
   "devDependencies": {
+    "@aws-sdk/client-cloudformation": "^3.1079.0",
+    "@aws-sdk/client-sts": "^3.1079.0",
     "aws-cdk": "^2.160.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {

@@ -13,6 +13,9 @@ import * as scheduler from "aws-cdk-lib/aws-scheduler";
 import * as apigw from "aws-cdk-lib/aws-apigatewayv2";
 import { HttpLambdaIntegration } from "aws-cdk-lib/aws-apigatewayv2-integrations";
 import * as path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**
  * The full AlphaBeacon architecture as code.
