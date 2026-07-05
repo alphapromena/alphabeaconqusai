@@ -13,4 +13,7 @@ export const config = {
    */
   textModelId: process.env.BEDROCK_TEXT_MODEL ?? "anthropic.claude-3-5-sonnet-20241022-v2:0",
   imageModelId: process.env.BEDROCK_IMAGE_MODEL ?? "amazon.titan-image-generator-v2:0",
+
+  /** Bedrock Knowledge Base id for RAG grounding (set after the KB is provisioned). */
+  knowledgeBaseId: process.env.BEDROCK_KB_ID ?? "",
 } as const;

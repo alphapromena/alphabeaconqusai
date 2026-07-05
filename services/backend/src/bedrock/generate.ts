@@ -90,7 +90,8 @@ function buildUserPrompt(input: GenerateInput): string {
 
 function parseDraft(text: string): DraftGeneration {
   const json = extractJson(text);
-  const citations: Citation[] = (json.citations ?? []).map((c: Record<string, unknown>) => ({
+  const rawCitations = Array.isArray(json.citations) ? (json.citations as Record<string, unknown>[]) : [];
+  const citations: Citation[] = rawCitations.map((c) => ({
     claim: String(c.claim ?? ""),
     sourceUrl: (c.sourceUrl as string) ?? undefined,
     sourceTitle: (c.sourceTitle as string) ?? undefined,

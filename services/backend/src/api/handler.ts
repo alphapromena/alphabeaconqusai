@@ -1,5 +1,8 @@
+import { randomUUID } from "node:crypto";
 import { SFNClient, StartExecutionCommand } from "@aws-sdk/client-sfn";
+import type { Feedback } from "@alphabeacon/shared";
 import { config } from "../shared/config.js";
+import { listDrafts, putFeedback } from "../shared/dynamo.js";
 
 const sfn = new SFNClient({ region: config.region });
 
@@ -15,7 +18,11 @@ export async function handler(event: HttpEvent) {
   const body = event.body ? JSON.parse(event.body) : {};
 
   try {
-    if (method === "GET" && path.startsWith("/drafts")) return json(200, await listDrafts(event.queryStringParameters?.runId));
+    if (method === "GET" && path.startsWith("/drafts")) {
+      const q = event.queryStringParameters ?? {};
+      const drafts = q.tenantId && q.runId ? await listDrafts(q.tenantId, q.runId) : [];
+      return json(200, { drafts });
+    }
     if (method === "POST" && path === "/on-demand") return json(202, await onDemand(body));
     if (method === "POST" && path === "/feedback") return json(201, await saveFeedback(body));
     if (method === "POST" && path === "/publish") return json(200, await publish(body));
@@ -23,11 +30,6 @@ export async function handler(event: HttpEvent) {
   } catch (err) {
     return json(500, { error: (err as Error).message });
   }
-}
-
-async function listDrafts(_runId?: string) {
-  // TODO: query DynamoDB for the run's drafts.
-  return { drafts: [] };
 }
 
 /** Kick off an on-demand generation run with a steering instruction. */
@@ -41,8 +43,17 @@ async function onDemand(body: { tenantId: string; instruction: string }) {
   return { started: true };
 }
 
-async function saveFeedback(_body: unknown) {
-  // TODO: persist Feedback; it feeds the next run's prompting (exemplars + preference notes).
+/** Persist feedback; it feeds the next run's prompting (exemplars + preference notes). */
+async function saveFeedback(body: { tenantId: string; draftId: string; rating?: "up" | "down"; comment?: string }) {
+  const fb: Feedback = {
+    tenantId: body.tenantId,
+    feedbackId: randomUUID(),
+    draftId: body.draftId,
+    rating: body.rating,
+    comment: body.comment,
+    createdAt: new Date().toISOString(),
+  };
+  await putFeedback(fb);
   return { saved: true };
 }
 
