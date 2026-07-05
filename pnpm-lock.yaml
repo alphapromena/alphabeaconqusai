@@ -67,6 +67,9 @@ importers:
       '@alphabeacon/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@aws-sdk/client-bedrock':
+        specifier: ^3.1079.0
+        version: 3.1079.0
       '@aws-sdk/client-bedrock-agent-runtime':
         specifier: ^3.700.0
         version: 3.1079.0
@@ -84,6 +87,9 @@ importers:
         version: 3.1079.0
       '@aws-sdk/client-sfn':
         specifier: ^3.700.0
+        version: 3.1079.0
+      '@aws-sdk/client-sts':
+        specifier: ^3.1079.0
         version: 3.1079.0
       '@aws-sdk/lib-dynamodb':
         specifier: ^3.700.0
@@ -129,6 +135,10 @@ packages:
     resolution: {integrity: sha512-+LxXUhnDsQ4Yr+zSQbROKClMfIRA8mLPtZgQukb6omczIqmi0yvDmbLovdLJGnm9GRj83kKSxWV24Ms5aUgJfg==}
     engines: {node: '>=20.0.0'}
 
+  '@aws-sdk/client-bedrock@3.1079.0':
+    resolution: {integrity: sha512-hUpq+0bhLeWV6B1AvqjEmV4Yc6W2+7ib5Kidr8KNn/ZHnuK1QsaQrML9tMyVe+9S9l1WQco9xuMziUm2vO2JSA==}
+    engines: {node: '>=20.0.0'}
+
   '@aws-sdk/client-dynamodb@3.1079.0':
     resolution: {integrity: sha512-njnQvv5lqyzX42Af/Z3nuxm6eK9/OPDYkaIah3m2sJoudAKkvvJ5jOTAtw8zGhu5zviT4Sa9giYC1FHkabuAFA==}
     engines: {node: '>=20.0.0'}
@@ -143,6 +153,10 @@ packages:
 
   '@aws-sdk/client-sfn@3.1079.0':
     resolution: {integrity: sha512-1R5Y2FyKhUojQeSjJ6oUsRmifNENthGBIYahLc/H7va5NwEpl0CisCvGGk022F+kyQEzYFdJdu6uy2nPt4LHIg==}
+    engines: {node: '>=20.0.0'}
+
+  '@aws-sdk/client-sts@3.1079.0':
+    resolution: {integrity: sha512-ycZDhMLf805leaBDQk0HnzvNJi293a0h++iG+hZtya5izd4Jyx022tV2owFc1u81c+Esdj6DchF5E9DAXxf8GQ==}
     engines: {node: '>=20.0.0'}
 
   '@aws-sdk/core@3.974.27':
@@ -974,6 +988,18 @@ snapshots:
       '@smithy/types': 4.15.1
       tslib: 2.8.1
 
+  '@aws-sdk/client-bedrock@3.1079.0':
+    dependencies:
+      '@aws-sdk/core': 3.974.27
+      '@aws-sdk/credential-provider-node': 3.972.62
+      '@aws-sdk/token-providers': 3.1079.0
+      '@aws-sdk/types': 3.973.15
+      '@smithy/core': 3.29.1
+      '@smithy/fetch-http-handler': 5.6.3
+      '@smithy/node-http-handler': 4.9.3
+      '@smithy/types': 4.15.1
+      tslib: 2.8.1
+
   '@aws-sdk/client-dynamodb@3.1079.0':
     dependencies:
       '@aws-sdk/core': 3.974.27
@@ -1016,6 +1042,18 @@ snapshots:
     dependencies:
       '@aws-sdk/core': 3.974.27
       '@aws-sdk/credential-provider-node': 3.972.62
+      '@aws-sdk/types': 3.973.15
+      '@smithy/core': 3.29.1
+      '@smithy/fetch-http-handler': 5.6.3
+      '@smithy/node-http-handler': 4.9.3
+      '@smithy/types': 4.15.1
+      tslib: 2.8.1
+
+  '@aws-sdk/client-sts@3.1079.0':
+    dependencies:
+      '@aws-sdk/core': 3.974.27
+      '@aws-sdk/credential-provider-node': 3.972.62
+      '@aws-sdk/signature-v4-multi-region': 3.996.38
       '@aws-sdk/types': 3.973.15
       '@smithy/core': 3.29.1
       '@smithy/fetch-http-handler': 5.6.3

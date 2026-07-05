@@ -31,19 +31,32 @@ export interface GenerateInput {
  */
 export async function generateDraft(input: GenerateInput): Promise<DraftGeneration> {
   const system = buildSystemPrompt(input.brand, input.tone);
-  const user = buildUserPrompt(input);
+  const baseUser = buildUserPrompt(input);
 
-  const res = await client.send(
-    new ConverseCommand({
-      modelId: config.textModelId,
-      system: [{ text: system }],
-      messages: [{ role: "user", content: [{ text: user }] }],
-      inferenceConfig: { maxTokens: 1200, temperature: 0.7 },
-    }),
-  );
-
-  const text = res.output?.message?.content?.find((c) => "text" in c)?.text ?? "";
-  return parseDraft(text);
+  // Cheaper models (e.g. Nova) occasionally emit truncated or slightly malformed JSON.
+  // Give generous headroom, then retry once with a firmer instruction before failing.
+  let lastErr: unknown;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const user =
+      attempt === 0
+        ? baseUser
+        : `${baseUser}\n\nIMPORTANT: return ONLY one complete, valid JSON object. Escape every quote and newline inside string values. Do not wrap it in markdown.`;
+    const res = await client.send(
+      new ConverseCommand({
+        modelId: config.textModelId,
+        system: [{ text: system }],
+        messages: [{ role: "user", content: [{ text: user }] }],
+        inferenceConfig: { maxTokens: 2048, temperature: 0.7 },
+      }),
+    );
+    const text = res.output?.message?.content?.find((c) => "text" in c)?.text ?? "";
+    try {
+      return parseDraft(text);
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr instanceof Error ? lastErr : new Error("generateDraft failed to parse model output");
 }
 
 function buildSystemPrompt(brand: BrandProfile, tone: ToneProfile): string {
@@ -106,8 +119,38 @@ function parseDraft(text: string): DraftGeneration {
 }
 
 function extractJson(text: string): Record<string, unknown> {
-  const start = text.indexOf("{");
-  const end = text.lastIndexOf("}");
-  if (start === -1 || end === -1) throw new Error("Model did not return JSON");
-  return JSON.parse(text.slice(start, end + 1));
+  let s = text.trim();
+  // Strip a ```json ... ``` fence if the model wrapped its output in one.
+  const fence = s.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  if (fence) s = fence[1].trim();
+
+  const start = s.indexOf("{");
+  if (start === -1) throw new Error("Model did not return JSON");
+
+  // Balanced, string-aware scan to find the matching close brace — robust to
+  // stray braces inside string values (which lastIndexOf('}') gets wrong).
+  let depth = 0;
+  let inStr = false;
+  let esc = false;
+  let end = -1;
+  for (let i = start; i < s.length; i++) {
+    const ch = s[i];
+    if (inStr) {
+      if (esc) esc = false;
+      else if (ch === "\\") esc = true;
+      else if (ch === '"') inStr = false;
+    } else if (ch === '"') inStr = true;
+    else if (ch === "{") depth++;
+    else if (ch === "}" && --depth === 0) {
+      end = i;
+      break;
+    }
+  }
+  const slice = end === -1 ? s.slice(start) : s.slice(start, end + 1);
+  return JSON.parse(repairJson(slice));
+}
+
+/** Light repair for the most common model JSON slips (trailing commas). */
+function repairJson(s: string): string {
+  return s.replace(/,\s*([}\]])/g, "$1");
 }
