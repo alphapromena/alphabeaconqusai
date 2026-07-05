@@ -43,6 +43,21 @@ function DraftCard({ draft }: { draft: Draft }) {
         <GuardBadges g={g} />
       </div>
 
+      {draft.image && (
+        <div style={{ position: "relative", marginBottom: 12 }}>
+          <img
+            src={draft.image.s3Key}
+            alt={draft.image.prompt}
+            style={{ width: "100%", height: 220, objectFit: "cover", borderRadius: 8, display: "block", background: "#17121b" }}
+          />
+          {draft.image.model === "placeholder" && (
+            <span style={{ position: "absolute", top: 8, right: 8, fontSize: 10, padding: "2px 7px", borderRadius: 999, background: "rgba(0,0,0,0.55)", color: "#fff" }}>
+              image model pending
+            </span>
+          )}
+        </div>
+      )}
+
       <p style={{ whiteSpace: "pre-wrap", lineHeight: 1.55, margin: "0 0 0.75rem" }}>{draft.editedBody ?? draft.body}</p>
 
       <p style={{ fontSize: 13, color: "#4E4C57", margin: "0 0 0.6rem" }}>
@@ -76,6 +91,7 @@ function GuardBadges({ g }: { g: Draft["guardrails"] }) {
     { ok: g.brandSafety.passed, label: "brand-safe" },
     { ok: g.claimCheck.passed, label: "claims" },
     { ok: g.repetition.passed, label: "fresh" },
+    { ok: g.style.passed, label: "on-voice" },
   ];
   return (
     <span style={{ display: "flex", gap: 6 }}>
@@ -99,7 +115,7 @@ const SAMPLE: Draft[] = [
     body: "Poor data quality quietly costs enterprises ~$12.9M a year. AI doesn't fix that — it scales it. Clean inputs first, then let the models earn their keep. 👉 Is your data AI-ready?",
     rationale: "Anchored on a widely-cited Gartner data-quality cost figure to open with a hard number.",
     citations: [{ claim: "$12.9M annual cost of poor data quality", sourceUrl: "https://www.gartner.com", sourceTitle: "Gartner", verified: true }],
-    guardrails: { brandSafety: { passed: true, hits: [] }, claimCheck: { passed: true, unverified: [] }, repetition: { passed: true, score: 0.1 } },
+    guardrails: { brandSafety: { passed: true, hits: [] }, claimCheck: { passed: true, unverified: [] }, repetition: { passed: true, score: 0.1 }, style: { passed: true, buzzwords: [] } },
     status: "needs_review", createdAt: new Date().toISOString(),
   },
   {
@@ -107,7 +123,7 @@ const SAMPLE: Draft[] = [
     body: "\"Garbage in, garbage out\" isn't a cliché — it's your AI roadmap's biggest risk. Most failed AI pilots didn't have a model problem. They had a data problem.",
     rationale: "Leans into the brand's signature provocation on data quality vs. AI hype.",
     citations: [],
-    guardrails: { brandSafety: { passed: true, hits: [] }, claimCheck: { passed: false, unverified: ["Most failed AI pilots had a data problem"] }, repetition: { passed: true, score: 0.2 } },
+    guardrails: { brandSafety: { passed: true, hits: [] }, claimCheck: { passed: false, unverified: ["Most failed AI pilots had a data problem"] }, repetition: { passed: true, score: 0.2 }, style: { passed: true, buzzwords: [] } },
     status: "flagged", createdAt: new Date().toISOString(),
   },
 ];

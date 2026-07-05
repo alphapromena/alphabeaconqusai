@@ -1,6 +1,8 @@
 import { BedrockRuntimeClient, ConverseCommand } from "@aws-sdk/client-bedrock-runtime";
 import type { BrandProfile, Citation, Signal, ToneProfile } from "@alphabeacon/shared";
+import { MARKETING_BUZZWORDS } from "@alphabeacon/shared";
 import { config } from "../shared/config.js";
+import { isSpecificSource } from "../pipeline/guardrails.js";
 
 const client = new BedrockRuntimeClient({ region: config.region });
 
@@ -70,6 +72,8 @@ function buildSystemPrompt(brand: BrandProfile, tone: ToneProfile): string {
     `Do: ${brand.voice.dos.join("; ")}`,
     `Don't: ${brand.voice.donts.join("; ")}`,
     `Never use these terms: ${brand.bannedTerms.join(", ") || "(none)"}`,
+    `Avoid generic marketing buzzwords — they read as slop and will be flagged: ${MARKETING_BUZZWORDS.join(", ")}. Write plainly and specifically instead.`,
+    `Use emoji sparingly (a few at most), not on every line.`,
     ``,
     `Write in this tone — ${tone.name}: ${tone.character}`,
     `Example of the register: "${tone.exampleTrigger}"`,
@@ -108,7 +112,7 @@ function parseDraft(text: string): DraftGeneration {
     claim: String(c.claim ?? ""),
     sourceUrl: (c.sourceUrl as string) ?? undefined,
     sourceTitle: (c.sourceTitle as string) ?? undefined,
-    verified: Boolean(c.sourceUrl), // provisional; the claim-check guardrail confirms this
+    verified: isSpecificSource(c.sourceUrl as string | undefined), // homepage-only URLs count as unverified
   }));
   return {
     body: String(json.body ?? "").trim(),

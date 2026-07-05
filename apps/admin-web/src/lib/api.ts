@@ -5,6 +5,13 @@ const BASE = import.meta.env.VITE_API_URL ?? "";
 /** Thin API client for the admin app. Endpoints are served by services/backend. */
 export const api = {
   async listDrafts(runId?: string): Promise<Draft[]> {
+    // No backend configured → load the fixture written by `local-run.mts` (a real generated run).
+    if (!BASE) {
+      const res = await fetch("/drafts.json", { cache: "no-store" });
+      if (!res.ok) return [];
+      const data = await res.json();
+      return data.drafts ?? [];
+    }
     const res = await fetch(`${BASE}/drafts${runId ? `?runId=${runId}` : ""}`);
     const data = await res.json();
     return data.drafts ?? [];

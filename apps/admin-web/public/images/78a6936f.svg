@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="g" cx="78%" cy="68%" r="90%">
+      <stop offset="0%" stop-color="#2a1420"/>
+      <stop offset="55%" stop-color="#17121b"/>
+      <stop offset="100%" stop-color="#0d0b10"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#g)"/>
+  <g fill="none" stroke="#FF1E57" stroke-opacity="0.5">
+    <circle cx="936" cy="428.4" r="120"/>
+    <circle cx="936" cy="428.4" r="190" stroke-opacity="0.25"/>
+    <circle cx="936" cy="428.4" r="260" stroke-opacity="0.12"/>
+  </g>
+  <circle cx="936" cy="428.4" r="10" fill="#FF1E57"/>
+  <text x="60" y="80" fill="#f1eff3" font-family="ui-monospace,monospace" font-size="20" letter-spacing="3" opacity="0.85">ALPHABEACON</text>
+  <text x="60" y="560" fill="#FF1E57" font-family="ui-monospace,monospace" font-size="26" letter-spacing="2">Data-driven</text>
+  <text x="60" y="595" fill="#c9c6d0" font-family="system-ui,sans-serif" font-size="16" opacity="0.7">A professional, modern office environment with people working on computers, sh</text>
+</svg>

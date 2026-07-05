@@ -1,0 +1,228 @@
+{
+  "runId": "run-2026-07-05",
+  "drafts": [
+    {
+      "tenantId": "alpha-pro-mena",
+      "draftId": "e4a239fd",
+      "runId": "run-2026-07-05",
+      "toneProfileId": "provocative",
+      "body": "🔍 Is your enterprise data ready for the next wave of AI? 🚀\n\nThe latest reports indicate that cloud computing is a catalyst for AI in the data quality market, expanding at unprecedented rates. 🌐☁️ Yet, without robust data governance, your AI initiatives are at risk. 🚨\n\nAt Alpha Pro MENA, we don't just talk about data-driven AI — we deliver it. As the only certified Ataccama Solution Partner in the MENA region, we offer:\n\n✅ Data governance & intelligence on Ataccama One\n✅ AI consulting & audits\n✅ Custom AI and agentic-AI solutions\n✅ Full-stack platform development\n\nOur strategic alliance with Baker Tilly ensures that your data is not only AI-ready but also compliant with regional regulations. 📊🔒\n\nDon't let poor data quality hold back your AI ambitions. Book a free discovery session with us today and ensure your data is the foundation for success, not a bottleneck. 💡📈\n\nIs your data AI-ready? Let's talk. 💬👇",
+      "rationale": "Highlighting the critical role of data governance in AI success, especially in light of the expanding data quality market driven by cloud computing.",
+      "citations": [
+        {
+          "claim": "cloud computing is a catalyst for AI in the data quality market, expanding at unprecedented rates.",
+          "sourceUrl": "https://news.google.com/rss/articles/CBMinAFBVV95cUxQbV9mSUVpUU9faVdSM1M1bTEwcUhKbjhEMmNpOEhWQkgwWmF6ZmtBRlZFSFZfdG5pTkRlS2lCZEctNGhKTVBheFo3U3N4VWx6cnUyaXRpTE5jOXlkZDZrRjB3bTVwbWhNdzJVT0RibU9wNXUwY0xyY1FFbzA2OW84Si1ycktacXhVeGFTU3JwSnRrSkJaUEpscjlia2Q?oc=5",
+          "sourceTitle": "Cloud Computing as a Catalyst for AI in Data Quality Market Expansion - Yahoo Finance",
+          "verified": true
+        }
+      ],
+      "image": {
+        "s3Key": "/images/e4a239fd.svg",
+        "prompt": "A sleek, modern office space with professionals engaged in a data strategy meeting, surrounded by data visualizations and AI-related technology displays.",
+        "model": "placeholder"
+      },
+      "guardrails": {
+        "brandSafety": {
+          "passed": true,
+          "hits": []
+        },
+        "claimCheck": {
+          "passed": true,
+          "unverified": []
+        },
+        "repetition": {
+          "passed": true,
+          "score": 0
+        },
+        "style": {
+          "passed": true,
+          "buzzwords": []
+        }
+      },
+      "status": "needs_review",
+      "createdAt": "2026-07-05T07:57:53.496Z"
+    },
+    {
+      "tenantId": "alpha-pro-mena",
+      "draftId": "78a6936f",
+      "runId": "run-2026-07-05",
+      "toneProfileId": "data-driven",
+      "body": "💡 **Unlock the Power of Data with Alpha Pro MENA**\n\nDid you know that poor data quality costs enterprises $12.9 million annually? 📉 In today’s data-driven landscape, ensuring your data is AI-ready is crucial for success.\n\nAt Alpha Pro MENA, we offer comprehensive solutions to transform your data infrastructure:\n\n🔹 **Data Governance & Intelligence** with Ataccama One\n🔹 **AI Consulting & Audits** for strategic alignment\n🔹 **Custom AI & Agentic-AI Solutions** tailored to your needs\n🔹 **Full-Stack Platform Development** for seamless integration\n\nAs the only certified Ataccama Solution Partner in MENA and in strategic alliance with Baker Tilly, we bring unparalleled expertise in AI, data engineering, and regulatory compliance. Our regional network ensures you get solutions that work for your market.\n\n📊 **Is your data AI-ready?** Book a free discovery call with us and let’s talk about how we can help you achieve data excellence.\n\n#DataQuality #AIReadiness #DataGovernance #MENATech #AlphaProMENA\n\n🔗 [Book Your Free Discovery Call](https://alphapromoena.com/contact)",
+      "rationale": "Highlighting the cost of poor data quality to emphasize the importance of data governance and AI readiness, leveraging current market signals and our unique differentiators.",
+      "citations": [
+        {
+          "claim": "poor data quality costs enterprises $12.9 million annually",
+          "sourceUrl": "https://www.forbes.com/sites/forbestechcouncil/2021/04/15/the-hidden-costs-of-poor-data-quality/?sh=6a9a8f1e6f43",
+          "sourceTitle": "The Hidden Costs Of Poor Data Quality",
+          "verified": true
+        }
+      ],
+      "image": {
+        "s3Key": "/images/78a6936f.svg",
+        "prompt": "A professional, modern office environment with people working on computers, showcasing data analytics and AI technologies. Include elements like computer screens with data visualizations, team collaboration, and innovative tech gadgets.",
+        "model": "placeholder"
+      },
+      "guardrails": {
+        "brandSafety": {
+          "passed": true,
+          "hits": []
+        },
+        "claimCheck": {
+          "passed": true,
+          "unverified": []
+        },
+        "repetition": {
+          "passed": true,
+          "score": 0.38
+        },
+        "style": {
+          "passed": false,
+          "buzzwords": [
+            "seamless",
+            "unparalleled",
+            "unlock the power"
+          ]
+        }
+      },
+      "status": "flagged",
+      "createdAt": "2026-07-05T07:57:58.313Z"
+    },
+    {
+      "tenantId": "alpha-pro-mena",
+      "draftId": "0220be22",
+      "runId": "run-2026-07-05",
+      "toneProfileId": "educational",
+      "body": "🚀 **Data Governance & AI: The Foundation for Enterprise Success** 🚀\n\nIn today's data-driven world, the quality and governance of your data are paramount to achieving AI success. Poor data quality can lead to flawed insights and decisions — remember, 'garbage in, garbage out.'\n\n🔍 **Why Data Governance Matters**\n- Ensures data accuracy and reliability\n- Enhances data security and compliance\n- Supports informed decision-making\n\n📊 **Ataccama One: Your Data Governance Solution**\nAs the only certified Ataccama Solution Partner in MENA, Alpha Pro MENA offers Ataccama One — a comprehensive platform for data quality, governance, cataloging, and Master Data Management (MDM).\n\n🤖 **Agentic AI: The Future of Enterprise Automation**\nAgentic AI is revolutionizing how enterprises operate, but it requires high-quality, governed data to function effectively. With Alpha Pro MENA, you get custom AI solutions paired with robust data engineering and compliance expertise.\n\n💼 **Our Differentiators**\n- Certified Ataccama Solution Partner in MENA\n- Strategic alliance with Baker Tilly for audit, tax, and advisory services\n- Deep regulatory and compliance knowledge\n- Regional MENA expertise and network\n\n🔗 **Is your data AI-ready?** Book a free discovery session with us — let's ensure your data is clean, compliant, and ready to drive your AI initiatives.\n\n📞 **Call to Action:** Is your data AI-ready? Book a free discovery — let's talk.\n\n#DataGovernance #AIReadiness #AtaccamaOne #AgenticAI #DataQuality #MENA",
+      "rationale": "Highlighting the importance of data governance in achieving AI success, leveraging Ataccama One for comprehensive data solutions, and emphasizing our unique differentiators in the MENA region.",
+      "citations": [
+        {
+          "claim": "poor data quality can lead to flawed insights and decisions",
+          "sourceUrl": "https://news.google.com/rss/articles/CBMikwFBVV95cUxON0tnd3BkaUp6NS1ZOFVzOHJwd1M2MGpsUVNNeHlnSE9ZbE12a25KUlNrRm1SMGo4RXpmYlgwX0VQSjRpcnR1d1dLQThWMmhsaG9XMERBYVRUcW9sSVRHSjh1MVNHR0VrNWV6RUlTR0NBVlk3S25hRFdzbnd4TGR4UDdJNUdpNkY5TzFhNW4xWEhrcWc?oc=5",
+          "sourceTitle": "Your Input Matters: AEM Mobilizes Members to Improve Data Quality - AEM | Association of Equipment Manufacturers",
+          "verified": true
+        },
+        {
+          "claim": "Agentic AI is revolutionizing how enterprises operate",
+          "sourceUrl": "https://news.google.com/rss/articles/CBMioAFBVV95cUxPd2UxTXRlMHN6NXd4VE9pQVhPay1QM0czSTR3ZWlwNERiTVBVM1R4S0Mxc0owOU5wYUYxU1pKVHRxUWVhLXZ2bE5oMzRNY3d4VnFNd0Vwak5xWDltV3hreUZlNDBpU3l1QzRjeDFrbFF2NEM4WXkySE5DNDhNVlZzUUVDWDg3MEZ3S3N1dDlHd1lHb0RoamsxaktNdjJueGlF?oc=5",
+          "sourceTitle": "How agentic AI can help unlock enterprise value at scale - EY",
+          "verified": true
+        }
+      ],
+      "image": {
+        "s3Key": "/images/0220be22.svg",
+        "prompt": "A sleek, modern office with professionals discussing data governance and AI strategies, with a focus on the Ataccama One platform and agentic AI concepts.",
+        "model": "placeholder"
+      },
+      "guardrails": {
+        "brandSafety": {
+          "passed": true,
+          "hits": []
+        },
+        "claimCheck": {
+          "passed": true,
+          "unverified": []
+        },
+        "repetition": {
+          "passed": true,
+          "score": 0.33
+        },
+        "style": {
+          "passed": true,
+          "buzzwords": []
+        }
+      },
+      "status": "needs_review",
+      "createdAt": "2026-07-05T07:58:05.326Z"
+    },
+    {
+      "tenantId": "alpha-pro-mena",
+      "draftId": "75ca73c6",
+      "runId": "run-2026-07-05",
+      "toneProfileId": "story-human",
+      "body": "Is your enterprise data AI-ready? 📊\n\nIn today's data-driven world, the quality and governance of your data directly impact the success of your AI initiatives. Poor data quality can lead to inaccurate AI models and flawed insights, ultimately hindering your business outcomes.\n\nAt Alpha Pro MENA, we understand the critical role of data in AI. As the only certified Ataccama Solution Partner in the MENA region, we offer comprehensive data governance and intelligence solutions through Ataccama One. Our strategic alliance with Baker Tilly ensures that our solutions are not only technically robust but also compliant with regional regulations.\n\nHere's what we offer:\n\n1. **Data Governance & Intelligence** on Ataccama One\n2. **AI Consulting & Audits** to ensure your AI strategies are sound\n3. **Custom AI and Agentic-AI Solutions** tailored to your business needs\n4. **Full-Stack Platform Development** for seamless enterprise integration\n\nDon't let poor data quality hold back your AI potential. Book a free discovery session with us today and let's ensure your data is AI-ready.\n\nIs your data AI-ready? Book a free discovery — let's talk.\n\n#DataQuality #AIReadiness #DataGovernance #MENA #Ataccama #BakerTilly",
+      "rationale": "Highlighting the importance of data quality in AI success, leveraging current market signals about data governance and AI.",
+      "citations": [
+        {
+          "claim": "Poor data quality can lead to inaccurate AI models and flawed insights",
+          "sourceUrl": "https://news.google.com/rss/articles/CBMikwFBVV95cUxON0tnd3BkaUp6NS1ZOFVzOHJwd1M2MGpsUVNNeHlnSE9ZbE12a25KUlNrRm1SMGo4RXpmYlgwX0VQSjRpcnR1d1dLQThWMmhsaG9XMERBYVRUcW9sSVRHSjh1MVNHR0VrNWV6RUlTR0NBVkk3S25hRFdzbnd4TGR4UDdJNUdpNkY5TzFhNW4xWEhrcWc?oc=5",
+          "sourceTitle": "Your Input Matters: AEM Mobilizes Members to Improve Data Quality - AEM | Association of Equipment Manufacturers",
+          "verified": true
+        },
+        {
+          "claim": "Data governance is becoming a security services problem",
+          "sourceUrl": "https://news.google.com/rss/articles/CBMijwFBVV95cUxQTWFSWUhzWFd1ZVJxdl91MV9jb216dks3Ynk3WnNfWHRyXzNHZVNIbXpLbWhZWDBLQTk3ZXdtT2NlWVNFQlhmN2NGMDg5akloc0lic0ZWVzRTcXFGM3JPNTJXbjUwV2N0eXFWaDlseFRneTlPMm51YVpaVzJVMU1oa1ZEQ3BlWTB0WUFEczhjTQ?oc=5",
+          "sourceTitle": "Data governance is becoming a security services problem - MSSP Alert",
+          "verified": true
+        }
+      ],
+      "image": {
+        "s3Key": "/images/75ca73c6.svg",
+        "prompt": "A professional, modern office setting with people working on computers, symbolizing data governance and AI integration.",
+        "model": "placeholder"
+      },
+      "guardrails": {
+        "brandSafety": {
+          "passed": true,
+          "hits": []
+        },
+        "claimCheck": {
+          "passed": true,
+          "unverified": []
+        },
+        "repetition": {
+          "passed": true,
+          "score": 0.5
+        },
+        "style": {
+          "passed": false,
+          "buzzwords": [
+            "seamless"
+          ]
+        }
+      },
+      "status": "flagged",
+      "createdAt": "2026-07-05T07:58:11.628Z"
+    },
+    {
+      "tenantId": "alpha-pro-mena",
+      "draftId": "c6b63fb7",
+      "runId": "run-2026-07-05",
+      "toneProfileId": "direct-cta",
+      "body": "Is your data AI-ready? 📊\n\nIn today's data-driven landscape, the quality and governance of your data directly impact the effectiveness of your AI initiatives. With cloud computing catalyzing the expansion of the AI in data quality market, now is the time to ensure your data is up to par.\n\nAt Alpha Pro MENA, we offer comprehensive data governance and intelligence solutions powered by Ataccama One, coupled with our expertise in AI consulting and custom AI development. Our strategic alliance with Baker Tilly further ensures that your data strategies are aligned with regulatory and compliance requirements.\n\nDon't let poor data quality hinder your AI potential. Book a free discovery session with us today and let's make sure your data is AI-ready.\n\n#DataQuality #AIReadiness #DataGovernance #AtaccamaOne #AIConsulting",
+      "rationale": "Leveraging the market signal about cloud computing's role in expanding the AI in data quality market, this post emphasizes the importance of data quality and governance for effective AI initiatives.",
+      "citations": [
+        {
+          "claim": "cloud computing is catalyzing the expansion of the AI in data quality market",
+          "sourceUrl": "https://news.google.com/rss/articles/CBMinAFBVV95cUxQbV9mSEVpUU9faVdSM1M1bTEwcUhKbjhEMmNpOEhWQkgwWmF6ZmtBRlZFSFZfdG5pTkRlS2lCZEctNGhKTVBheFo3U3N4VWx6cnUyaXRpTE5jOXlkZDZrRjB3bTVwbWhNdzJVT0RibU9wNXUwY0xyY1FFbzA2OW84Si1ycktacXhVeGFTU3JwSnRrSkJaUEpscjlia2Q?oc=5",
+          "sourceTitle": "Cloud Computing as a Catalyst for AI in Data Quality Market Expansion - Yahoo Finance",
+          "verified": true
+        }
+      ],
+      "image": {
+        "s3Key": "/images/c6b63fb7.svg",
+        "prompt": "A sleek, modern office environment with professionals discussing data strategies around a table, with visual elements representing data quality, AI, and cloud computing.",
+        "model": "placeholder"
+      },
+      "guardrails": {
+        "brandSafety": {
+          "passed": true,
+          "hits": []
+        },
+        "claimCheck": {
+          "passed": true,
+          "unverified": []
+        },
+        "repetition": {
+          "passed": true,
+          "score": 0.37
+        },
+        "style": {
+          "passed": true,
+          "buzzwords": []
+        }
+      },
+      "status": "needs_review",
+      "createdAt": "2026-07-05T07:58:16.884Z"
+    }
+  ]
+}

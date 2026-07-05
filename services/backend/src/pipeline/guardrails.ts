@@ -1,4 +1,5 @@
 import type { Citation, GuardrailReport } from "@alphabeacon/shared";
+import { MARKETING_BUZZWORDS } from "@alphabeacon/shared";
 
 /**
  * Guardrails run on every draft before a human sees it. They are not optional polish — the
@@ -12,13 +13,35 @@ export function checkBrandSafety(body: string, bannedTerms: string[]): Guardrail
 }
 
 /**
- * Claim-check: every factual claim must carry a checkable source. Claims the model produced
- * without a source URL are flagged for the human (and ideally stripped upstream).
+ * Claim-check: every factual claim must carry a *specific* checkable source. A claim with no
+ * URL — or one that only cites a site's homepage (e.g. "gartner.com", a tell that the model
+ * pulled a number from memory rather than a provided signal) — is flagged for the human.
  * TODO: add active verification — fetch the source and confirm the number actually appears.
  */
 export function checkClaims(citations: Citation[]): GuardrailReport["claimCheck"] {
-  const unverified = citations.filter((c) => !c.sourceUrl).map((c) => c.claim);
+  const unverified = citations.filter((c) => !isSpecificSource(c.sourceUrl)).map((c) => c.claim);
   return { passed: unverified.length === 0, unverified };
+}
+
+/** A source URL is "specific" only if it points at an article/page, not a bare homepage. */
+export function isSpecificSource(url?: string): boolean {
+  if (!url) return false;
+  try {
+    const u = new URL(url);
+    return u.pathname.replace(/\/+$/, "").length > 0; // has a path beyond "/"
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Style guard: flags marketing-slop / buzzwords ("seamless", "cutting-edge", …). These aren't
+ * unsafe, just generic and off-brand — surfacing them lets a human tighten before publishing.
+ */
+export function checkStyle(body: string, buzzwords: string[] = MARKETING_BUZZWORDS): GuardrailReport["style"] {
+  const norm = body.toLowerCase().replace(/[-_]/g, " ");
+  const hits = buzzwords.filter((w) => norm.includes(w.toLowerCase()));
+  return { passed: hits.length === 0, buzzwords: hits };
 }
 
 /**
@@ -53,11 +76,12 @@ export function buildReport(
     brandSafety: checkBrandSafety(body, bannedTerms),
     claimCheck: checkClaims(citations),
     repetition: checkRepetition(body, recentBodies),
+    style: checkStyle(body),
   };
 }
 
 export function reportPassed(r: GuardrailReport): boolean {
-  return r.brandSafety.passed && r.claimCheck.passed && r.repetition.passed;
+  return r.brandSafety.passed && r.claimCheck.passed && r.repetition.passed && r.style.passed;
 }
 
 function tokens(s: string): Set<string> {

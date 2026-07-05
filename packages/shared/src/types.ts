@@ -118,6 +118,8 @@ export interface GuardrailReport {
   brandSafety: { passed: boolean; hits: string[] };
   claimCheck: { passed: boolean; unverified: string[] };
   repetition: { passed: boolean; similarTo?: string; score: number };
+  /** Marketing-slop / buzzword usage — flags generic copy for a human to tighten. */
+  style: { passed: boolean; buzzwords: string[] };
 }
 
 /** A published post (a Draft that went live). */
