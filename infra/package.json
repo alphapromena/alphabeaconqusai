@@ -1,0 +1,22 @@
+{
+  "name": "@alphabeacon/infra",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": { "alphabeacon": "bin/app.js" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "cdk": "cdk",
+    "deploy": "cdk deploy",
+    "synth": "cdk synth"
+  },
+  "devDependencies": {
+    "aws-cdk": "^2.160.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.160.0",
+    "constructs": "^10.3.0"
+  }
+}
